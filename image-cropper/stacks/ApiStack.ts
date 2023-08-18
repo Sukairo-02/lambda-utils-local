@@ -1,4 +1,4 @@
-import { StackContext, Bucket, Config } from 'sst/constructs';
+import { StackContext, Bucket, Api, ApiGatewayV1Api } from 'sst/constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 
 export function ApiStack({ stack }: StackContext) {
@@ -26,8 +26,30 @@ export function ApiStack({ stack }: StackContext) {
     // Allow the notification functions to access the bucket
     bucket.attachPermissions([bucket]);
 
+    const api = new ApiGatewayV1Api(stack, 'Api', {
+        cdk: {
+            restApi: {
+                defaultCorsPreflightOptions: {
+                    allowOrigins: ['"*"'],
+                },
+                binaryMediaTypes: ['*/*'],
+            },
+        },
+        routes: {
+            'POST /resize': {
+                function: {
+                    handler: 'packages/functions/src/endpoint.handler',
+                    timeout: 900,
+                },
+            },
+        },
+    });
+
+    api.bind([bucket]);
+
     // Show the endpoint in the output
     stack.addOutputs({
         BucketName: bucket.bucketName,
+        ApiEndpoint: api.url,
     });
 }

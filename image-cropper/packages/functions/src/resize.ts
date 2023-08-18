@@ -26,6 +26,7 @@ function writeStreamToS3({ Bucket, Key }: { Bucket: string; Key: string }) {
     const upload = new Upload({
         client: S3,
         params: {
+            ACL: 'public-read',
             Bucket,
             Key,
             Body: pass,
