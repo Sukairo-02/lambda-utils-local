@@ -1,0 +1,20 @@
+{
+  "name": "@pisyapopa/functions",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "sst bind vitest",
+    "build": "tsc --noEmit && esbuild src/apilambda.ts --bundle --platform=node --format=esm --outfile=build/index.js --external:sharp",
+    "typecheck": "tsc -noEmit"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.119",
+    "@types/node": "^20.4.7",
+    "esbuild": "^0.19.0",
+    "sst": "^2.23.2",
+    "vitest": "^0.34.1"
+  },
+  "dependencies": {
+    "sharp": "^0.32.5"
+  }
+}
