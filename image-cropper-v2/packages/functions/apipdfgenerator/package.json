@@ -15,6 +15,6 @@
     "vitest": "^0.34.1"
   },
   "dependencies": {
-    "sharp": "^0.32.5"
+    "puppeteer": "^21.1.0"
   }
 }
