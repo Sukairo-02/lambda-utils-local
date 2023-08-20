@@ -24,14 +24,19 @@ export function ExampleStack({ stack }: StackContext) {
   const cropFunc = new Function(stack, "cropFunction", {
     architecture:"arm_64",
     runtime: "container",
-    // runtime: "nodejs18.x",
-    // handler: "./packages/functions"
-    handler: "./packages/functions"
+    handler: "./packages/functions/apicropper"
+  })
+
+  const pdfGeneratorFunc = new Function(stack, "pdfGeneratorFunc", {
+    // architecture:"arm_64",
+    runtime: "container",
+    handler: "./packages/functions/apipdfgenerator"
   })
 
   const api = new Api(stack, "Api", {
     routes: {
-      "PUT /": cropFunc,
+      "PUT /crop": cropFunc,
+      "PUT /pdf": pdfGeneratorFunc
     }
   })
 

@@ -1,6 +1,5 @@
 import { APIGatewayProxyStructuredResultV2 } from 'aws-lambda'
-// import { ApiHandler } from "sst/node/api";
-import { cropFunction } from './crop'
+import cropFunction from './crop'
 
 const dimensionError = {
   statusCode: 400,
