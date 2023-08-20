@@ -1,6 +1,6 @@
 import sharp from 'sharp'
 
-export const cropFunction = async (
+export default async (
 	image: Buffer,
 	config?: {
 		width: number
@@ -9,8 +9,8 @@ export const cropFunction = async (
 ) => {
 	let width, height
 	if (config) {
-		width = config.width
-		height = config.height
+		width = Math.floor(config.width)
+		height = Math.floor(config.height)
 	} else {
 		const defaultSize = 500
 
