@@ -2,54 +2,54 @@ import { APIGatewayProxyStructuredResultV2 } from 'aws-lambda'
 import cropFunction from './crop'
 
 const dimensionError = {
-  statusCode: 400,
-  body: {
-    message: 'Height and width must be positive numbers or undefined'
-  }
+	statusCode: 400,
+	body: {
+		message: 'Height and width must be positive numbers or undefined'
+	}
 }
 
 export const handler = async (evt: APIGatewayProxyStructuredResultV2) => {
-  if (!evt.body) {
-    return {
-      statusCode: 500,
-      body: 'No body'
-    }
-  }
+	if (!evt.body) {
+		return {
+			statusCode: 400,
+			body: 'Expected request with body'
+		}
+	}
 
-  const body = JSON.parse(evt.body)
+	const body = JSON.parse(evt.body)
 
-  if (!body.image) {
-    return {
-      statusCode: 500,
-      body: 'No image'
-    }
-  }
+	if (!body.image) {
+		return {
+			statusCode: 400,
+			body: `Image expected in 'request.body.image'`
+		}
+	}
 
-  const { height, width } = body
-  let cropConfig:
-    | undefined
-    | {
-        height: number
-        width: number
-      }
+	const { height, width } = body
+	let cropConfig:
+		| undefined
+		| {
+				height: number
+				width: number
+		  }
 
-  if (height === undefined || width === undefined) cropConfig = undefined
-  else if (Number.isNaN(height) || Number.isNaN(width) || Math.floor(width) <= 0 || Math.floor(height) <= 0)
-    return dimensionError
-  else cropConfig = { height, width }
+	if (height === undefined || width === undefined) cropConfig = undefined
+	else if (Number.isNaN(height) || Number.isNaN(width) || Math.floor(width) <= 0 || Math.floor(height) <= 0)
+		return dimensionError
+	else cropConfig = { height, width }
 
-  const imageBuffer = Buffer.from(body.image, 'base64')
+	const imageBuffer = Buffer.from(body.image, 'base64')
 
-  const formattedBuffer = await cropFunction(imageBuffer, cropConfig)
+	const formattedBuffer = await cropFunction(imageBuffer, cropConfig)
 
-  const formattedImageBase64 = formattedBuffer.toString('base64')
+	const formattedImageBase64 = formattedBuffer.toString('base64')
 
-  return {
-    statusCode: 200,
-    body: formattedImageBase64,
-    headers: {
-      'Content-Type': 'image/webp'
-    },
-    isBase64Encoded: true
-  }
+	return {
+		statusCode: 200,
+		body: formattedImageBase64,
+		headers: {
+			'Content-Type': 'image/webp'
+		},
+		isBase64Encoded: true
+	}
 }
