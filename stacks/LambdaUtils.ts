@@ -12,10 +12,12 @@ export function LambdaUtils({ stack }: StackContext) {
 		},
 		cdk: {
 			restApi: {
-				binaryMediaTypes: ['multipart/form-data', 'application/json']
+				binaryMediaTypes: ['*/*']
 			}
 		}
 	})
+
+	gatewayV1.attachPermissions([gatewayV1])
 
 	stack.addOutputs({
 		ApiV1Endpoint: gatewayV1.url

@@ -36,7 +36,8 @@ const lambda: APIGatewayProxyHandler = async (event) => {
 		body: processed.toString('base64'),
 		headers: {
 			'Content-Type': outMime
-		}
+		},
+		isBase64Encoded: true
 	}
 }
 
