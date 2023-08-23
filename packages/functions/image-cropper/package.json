@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"test": "sst bind vitest",
-		"build": "tsc --noEmit && esbuild src/lambda.ts --bundle --platform=node --format=esm --outfile=build/index.js --external:sharp",
+		"build": "tsc --noEmit && esbuild src/lambda.ts --bundle --platform=node --format=esm --outfile=build/index.js --external:sharp --external:lambda-multipart-parser",
 		"typecheck": "tsc -noEmit"
 	},
 	"devDependencies": {
