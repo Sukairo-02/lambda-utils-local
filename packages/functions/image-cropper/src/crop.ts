@@ -1,5 +1,5 @@
 import sharp from 'sharp'
-import { badRequest } from '@hapi/boom'
+import { badRequest, badData } from '@hapi/boom'
 
 import type { CropperConfig, NumberContainer } from './types'
 
@@ -44,6 +44,14 @@ const extractNonNegatives = <T extends NumberContainer>(container: T, errPrefix?
 }
 
 export default async (image: Buffer, config: CropperConfig) => {
+	let meta: sharp.Metadata
+
+	try {
+		meta = await sharp(image).metadata()
+	} catch (e) {
+		throw badData('Unable to process image. Make sure attached file is an image of any format supported by sharp.')
+	}
+
 	let imgProcessor = sharp(image)
 
 	if (config.crop) {
@@ -57,7 +65,7 @@ export default async (image: Buffer, config: CropperConfig) => {
 			errPrefix
 		)
 
-		const { height: srcHeight, width: srcWidth } = await sharp(image).metadata()
+		const { height: srcHeight, width: srcWidth } = meta
 
 		if ((srcHeight && top + height > srcHeight) || (srcWidth && left + width > srcWidth))
 			throw badRequest('Crop config error: sum of offset & size cannot be greater than size of original image!')
