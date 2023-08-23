@@ -12,7 +12,7 @@ export function LambdaUtils({ stack }: StackContext) {
 		},
 		cdk: {
 			restApi: {
-				binaryMediaTypes: ['multipart/form-data', 'application/json']
+				binaryMediaTypes: ['*/*']
 			}
 		}
 	})
