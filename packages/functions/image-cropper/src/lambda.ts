@@ -27,11 +27,15 @@ const lambda: APIGatewayProxyHandler = async (event) => {
 
 	const processed = await crop(image, config)
 
+	const [{ contentType }] = bodyObj.files
+
+	const outMime = config.convert?.format ? `image/${config.convert.format}` : contentType
+
 	return {
 		statusCode: 200,
 		body: processed.toString('base64'),
 		headers: {
-			'Content-Type': 'image'
+			'Content-Type': outMime
 		}
 	}
 }
