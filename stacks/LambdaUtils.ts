@@ -9,6 +9,11 @@ export function LambdaUtils({ stack }: StackContext) {
 	const gatewayV1 = new ApiGatewayV1Api(stack, 'gateway-v1', {
 		routes: {
 			'POST /crop-image': imageCropper
+		},
+		cdk: {
+			restApi: {
+				binaryMediaTypes: ['multipart/form-data', 'application/json']
+			}
 		}
 	})
 
