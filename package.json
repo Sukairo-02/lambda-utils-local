@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "sst dev",
     "build": "sst build",
-    "deploy": "sst deploy",
-    "remove": "sst remove",
+    "deploy": "sst deploy --stage root",
+    "remove": "sst remove --stage root",
     "console": "sst console",
     "typecheck": "tsc --noEmit"
   },

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export default z.object({
-	image: z.instanceof(Buffer).or(z.string().transform((str) => Buffer.from(str))),
+	image: z.instanceof(Buffer).or(z.string().transform((str) => Buffer.from(str, 'base64'))),
 
 	config: z.object({
 		crop: z
