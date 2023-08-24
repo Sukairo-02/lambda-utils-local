@@ -1,6 +1,13 @@
 import { Boom, isBoom } from '@hapi/boom'
 import type { APIGatewayProxyHandler, APIGatewayProxyHandlerV2 } from 'aws-lambda'
 
+const defaultError = {
+	statusCode: 500,
+	body: JSON.stringify({
+		message: 'Something went wrong. Try again later...'
+	})
+}
+
 export const handlerV1 = (handler: APIGatewayProxyHandler) => {
 	const wrapped: APIGatewayProxyHandler = async (event, context, callback) => {
 		try {
@@ -13,7 +20,10 @@ export const handlerV1 = (handler: APIGatewayProxyHandler) => {
 				}
 			)
 		} catch (err) {
-			if (typeof err !== 'object' || !isBoom(err)) throw err
+			if (typeof err !== 'object' || !isBoom(err)) {
+				console.error(err)
+				return defaultError
+			}
 
 			const {
 				data,
@@ -48,7 +58,10 @@ export const handlerV2 = (handler: APIGatewayProxyHandlerV2) => {
 				}
 			)
 		} catch (err) {
-			if (typeof err !== 'object' || !isBoom(err)) throw err
+			if (typeof err !== 'object' || !isBoom(err)) {
+				console.error(err)
+				return defaultError
+			}
 
 			const {
 				data,
