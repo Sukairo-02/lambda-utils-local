@@ -1,6 +1,6 @@
 # Lambda Utils
 
-    Collection of utils
+Collection of utils
 
 ## Deployment
 
