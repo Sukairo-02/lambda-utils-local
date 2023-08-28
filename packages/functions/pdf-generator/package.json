@@ -1,0 +1,20 @@
+{
+	"name": "@lambda-utils/functions/pdf-generator",
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"test": "sst bind vitest",
+		"build": "tsc --noEmit && esbuild src/lambda.ts --bundle --platform=node --format=esm --outfile=build/index.js",
+		"typecheck": "tsc -noEmit"
+	},
+	"devDependencies": {
+		"@types/aws-lambda": "^8.10.119",
+		"@types/node": "^20.5.2",
+		"sst": "^2.24.12",
+		"vitest": "^0.34.2"
+	},
+	"dependencies": {
+		"@hapi/boom": "^10.0.1",
+		"puppeteer": "^21.1.0"
+	}
+}
