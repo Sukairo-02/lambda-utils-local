@@ -16,4 +16,6 @@ RUN npm install
 RUN npm prune --production
 RUN npm cache clean --force
 
+WORKDIR ${LAMBDA_TASK_ROOT}
+
 CMD ["node", "build/index.handler"]
