@@ -12,8 +12,11 @@ RUN yum install ./google-chrome-stable_current_*.rpm -y
 COPY package.json ${LAMBDA_TASK_ROOT}
 COPY build ${LAMBDA_TASK_ROOT}
 
+WORKDIR ${LAMBDA_TASK_ROOT}
+
 RUN npm install
 RUN npm prune --production
 RUN npm cache clean --force
+
 
 CMD ["node", "build/index.handler"]
