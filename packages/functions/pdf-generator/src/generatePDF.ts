@@ -3,10 +3,13 @@ import { badRequest } from '@hapi/boom'
 
 import type { GeneratorOptions } from './types'
 
+const YOUR_LOCAL_CHROMIUM_PATH =
+  "/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium";
+
 export default async (html: URL | Buffer | string, options?: GeneratorOptions) => {
 	const browser = await puppeteer.launch({
 		headless: 'new',
-		executablePath: '/usr/bin/google-chrome',
+		executablePath: YOUR_LOCAL_CHROMIUM_PATH ? YOUR_LOCAL_CHROMIUM_PATH : '/usr/bin/google-chrome',
 		args: [
 			'--disable-extensions',
 			'--no-sandbox',
@@ -14,7 +17,7 @@ export default async (html: URL | Buffer | string, options?: GeneratorOptions) =
 			'--disable-dev-shm-usage',
 			'--disable-gpu'
 		]
-	})
+	})	
 	const page = await browser.newPage()
 
 	try {
