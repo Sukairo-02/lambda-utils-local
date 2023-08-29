@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"test": "sst bind vitest",
-		"build": "tsc --noEmit && esbuild src/layerlambda.ts --bundle --format=esm --platform=node --outfile=build/index.mjs --external:puppeteer --external:puppeteer-core --external:@sparticuz/chromium",
+		"build": "tsc --noEmit && esbuild src/lambda.ts --bundle --format=esm --platform=node --outfile=build/index.mjs --external:puppeteer --external:puppeteer-core --external:@sparticuz/chromium",
 		"typecheck": "tsc -noEmit"
 	},
 	"devDependencies": {

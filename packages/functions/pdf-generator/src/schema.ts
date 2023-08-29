@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import { badRequest } from '@hapi/boom'
 
 const pageFormatSchema = z.union([
 	z.literal('letter'),
