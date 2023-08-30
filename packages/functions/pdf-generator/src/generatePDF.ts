@@ -9,8 +9,6 @@ import type { BrowserOptions, PDFOptions } from './types'
 
 const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
 
-let blocker: PuppeteerBlocker | undefined
-
 const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 	const checkDurationMsecs = 1_000
 	const maxChecks = timeout / checkDurationMsecs
@@ -48,12 +46,10 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 	const page = await browser.newPage()
 
 	if (browserOptions?.adBlocker) {
-		blocker =
-			blocker ??
-			(await PuppeteerBlocker.fromLists(fetch, [
-				'https://secure.fanboy.co.nz/fanboy-cookiemonster.txt',
-				'https://easylist.to/easylist/easylist.txt'
-			]))
+		const blocker = await PuppeteerBlocker.fromLists(fetch, [
+			'https://secure.fanboy.co.nz/fanboy-cookiemonster.txt',
+			'https://easylist.to/easylist/easylist.txt'
+		])
 
 		await blocker.enableBlockingInPage(page)
 	}
