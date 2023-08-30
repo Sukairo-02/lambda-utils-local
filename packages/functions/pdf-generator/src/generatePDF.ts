@@ -35,18 +35,14 @@ const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 
 const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
 
-let browser: Browser | undefined
-
 export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
-	browser =
-		browser ??
-		(await puppeteer.launch({
-			args: chromium.args,
-			defaultViewport: chromium.defaultViewport,
-			executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
-			headless: chromium.headless,
-			ignoreHTTPSErrors: true
-		}))
+	const browser = await puppeteer.launch({
+		args: chromium.args,
+		defaultViewport: chromium.defaultViewport,
+		executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
+		headless: chromium.headless,
+		ignoreHTTPSErrors: true
+	})
 
 	const page = await browser.newPage()
 
@@ -83,12 +79,17 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 			throw err
 		}
 
-		await page.close()
 		return pdf
 	} catch (e) {
 		throw e
 	} finally {
-		await page.close()
+		try {
+			await page.close()
+		} catch (err) {}
+
+		try {
+			browser?.process()?.kill('SIGINT')
+		} catch (err) {}
 	}
 }
 
