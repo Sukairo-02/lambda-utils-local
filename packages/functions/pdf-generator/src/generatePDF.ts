@@ -88,7 +88,12 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 		} catch (err) {}
 
 		try {
-			browser?.process()?.kill('SIGINT')
+			browser?.process()?.kill('SIGTERM')
+			const asyncDoubleKillBrowser = await (async () => {
+				try {
+					await browser.close
+				} catch (e) {}
+			})()
 		} catch (err) {}
 	}
 }
