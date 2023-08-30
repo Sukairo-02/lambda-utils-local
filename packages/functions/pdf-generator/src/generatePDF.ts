@@ -36,11 +36,14 @@ const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 }
 
 export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
+	console.log("args:", chromium.args );
+	
 	const browser = await puppeteer.launch({
 		args: chromium.args,
 		defaultViewport: chromium.defaultViewport,
 		executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
-		headless: chromium.headless
+		headless: chromium.headless,
+		ignoreHTTPSErrors: true
 	})
 
 	const page = await browser.newPage()
@@ -73,6 +76,7 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 		throw err
 	}
 
+	await page.close()
 	return pdf
 }
 
