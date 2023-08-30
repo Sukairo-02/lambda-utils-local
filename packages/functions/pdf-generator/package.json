@@ -17,6 +17,7 @@
 		"@cliqz/adblocker-puppeteer": "^1.26.6",
 		"@hapi/boom": "^10.0.1",
 		"@sparticuz/chromium": "^116.0.0",
+		"cross-fetch": "^4.0.0",
 		"puppeteer": "^21.1.0"
 	}
 }

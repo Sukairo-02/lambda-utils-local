@@ -4,13 +4,40 @@ import { badRequest } from '@hapi/boom'
 import { PuppeteerBlocker } from '@cliqz/adblocker-puppeteer'
 import fetch from 'cross-fetch'
 
-import type { GeneratorOptions } from './types'
+import type { Page } from 'puppeteer'
+import type { BrowserOptions, PDFOptions } from './types'
 
 const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
 
 let blocker: PuppeteerBlocker | undefined
 
-export default async (html: URL | Buffer | string, options?: GeneratorOptions) => {
+const waitTillHTMLRendered = async (page: Page, timeout: number) => {
+	const checkDurationMsecs = 1_000
+	const maxChecks = timeout / checkDurationMsecs
+
+	let lastHTMLSize = 0
+	let checkCounts = 1
+	let countStableSizeIterations = 0
+
+	const minStableSizeIterations = 3
+
+	while (checkCounts++ <= maxChecks) {
+		const html = await page.content()
+		const currentHTMLSize = html.length
+
+		await page.evaluate(() => document.body.innerHTML.length)
+
+		if (lastHTMLSize != 0 && currentHTMLSize == lastHTMLSize) countStableSizeIterations++
+		else countStableSizeIterations = 0
+
+		if (countStableSizeIterations >= minStableSizeIterations) break
+
+		lastHTMLSize = currentHTMLSize
+		await new Promise((r) => setTimeout(r, checkDurationMsecs))
+	}
+}
+
+export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
 	const browser = await puppeteer.launch({
 		args: chromium.args,
 		defaultViewport: chromium.defaultViewport,
@@ -20,7 +47,7 @@ export default async (html: URL | Buffer | string, options?: GeneratorOptions) =
 
 	const page = await browser.newPage()
 
-	if (html instanceof URL) {
+	if (browserOptions?.adBlocker) {
 		blocker =
 			blocker ??
 			(await PuppeteerBlocker.fromLists(fetch, [
@@ -29,18 +56,21 @@ export default async (html: URL | Buffer | string, options?: GeneratorOptions) =
 			]))
 
 		await blocker.enableBlockingInPage(page)
+	}
 
+	if (html instanceof URL) {
 		await page.goto(html.toString(), { waitUntil: ['load', 'domcontentloaded', 'networkidle0'] })
 	} else {
 		await page.setContent(html.toString(), { waitUntil: ['load', 'domcontentloaded', 'networkidle0'] })
 	}
 
 	await page.emulateMediaType('screen')
+	if (browserOptions?.secondaryRenderAwait) await waitTillHTMLRendered(page, 30_000)
 
 	let pdf: Buffer
 
 	try {
-		pdf = await page.pdf(options)
+		pdf = await page.pdf(pdfOptions)
 	} catch (err) {
 		if (err && typeof err === 'object') throw badRequest((<any>err).message)
 

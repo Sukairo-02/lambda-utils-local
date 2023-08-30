@@ -1,7 +1,14 @@
-import type { PDFOptions } from 'puppeteer'
+import type { PDFOptions as PuppeteerOptions } from 'puppeteer'
 
 type OmittedOptions = {
 	path: any
+	headerTemplate: any
+	footerTemplate: any
 }
 
-export type GeneratorOptions = Omit<PDFOptions, keyof OmittedOptions>
+export type PDFOptions = Omit<PuppeteerOptions, keyof OmittedOptions>
+
+export type BrowserOptions = {
+	secondaryRenderAwait?: boolean
+	adBlocker?: boolean
+}

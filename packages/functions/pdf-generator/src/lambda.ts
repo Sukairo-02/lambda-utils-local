@@ -18,9 +18,9 @@ const lambda: APIGatewayProxyHandlerV2 = async (event) => {
 	const parseResult = schema.safeParse(bodyObj)
 	if (!parseResult.success) throw badRequest('Invalid input', parseResult.error.errors)
 
-	const { source, config } = parseResult.data
+	const { source, pdfOptions, browserOptions } = parseResult.data
 
-	const pdf = await generatePDF(source, config)
+	const pdf = await generatePDF(source, pdfOptions, browserOptions)
 
 	return {
 		statusCode: 200,

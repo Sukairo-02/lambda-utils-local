@@ -21,11 +21,9 @@ const pdfMarginSchema = z.object({
 	right: z.number().min(0).or(z.string()).optional()
 })
 
-const configSchema = z.object({
+const pdfSchema = z.object({
 	scale: z.number().min(0.1).max(2).optional(),
 	displayHeaderFooter: z.boolean().optional(),
-	headerTemplate: z.string().optional(),
-	footerTemplate: z.string().optional(),
 	printBackground: z.boolean().optional(),
 	landscape: z.boolean().optional(),
 	pageRanges: z
@@ -44,8 +42,13 @@ const configSchema = z.object({
 	height: z.number().min(1).or(z.string()).optional(), // therefore shall be parsed by lib itself
 	preferCSSPageSize: z.boolean().optional(),
 	margin: pdfMarginSchema.optional(),
-	omitBackgdound: z.boolean().optional(),
+	omitBackground: z.boolean().optional(),
 	timeout: z.number().min(0).optional()
+})
+
+const browserSchema = z.object({
+	secondaryRenderAwait: z.boolean().optional(),
+	adBlocker: z.boolean().optional()
 })
 
 export default z.object({
@@ -57,5 +60,6 @@ export default z.object({
 		z.string(),
 		z.instanceof(Buffer)
 	]),
-	config: configSchema.optional()
+	pdfOptions: pdfSchema.optional(),
+	browserOptions: browserSchema.optional()
 })
