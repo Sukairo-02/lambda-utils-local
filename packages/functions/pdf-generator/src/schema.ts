@@ -57,5 +57,5 @@ export default z.object({
 		z.string(),
 		z.instanceof(Buffer)
 	]),
-	config: configSchema
+	config: configSchema.optional()
 })

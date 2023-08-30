@@ -1,10 +1,11 @@
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda'
 import { badRequest } from '@hapi/boom'
 
+import { handlerV2 } from '@lambda-utils/core/apiGatewayErrorHandler'
 import schema from './schema'
 import generatePDF from './generatePDF'
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
+const lambda: APIGatewayProxyHandlerV2 = async (event) => {
 	if (!event.body) throw badRequest('Invalid input')
 	let bodyObj: any
 
@@ -30,3 +31,5 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 		isBase64Encoded: true
 	}
 }
+
+export const handler = handlerV2(lambda)

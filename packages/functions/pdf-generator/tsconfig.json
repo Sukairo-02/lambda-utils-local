@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"module": "esnext",
 		"moduleResolution": "node",
+		"noErrorTruncation": true,
 		"baseUrl": ".",
 		"paths": {
 			"@lambda-utils/core/*": ["../../core/src/*"]
