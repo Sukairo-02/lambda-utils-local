@@ -4,10 +4,8 @@ import { badRequest } from '@hapi/boom'
 import { PuppeteerBlocker } from '@cliqz/adblocker-puppeteer'
 import fetch from 'cross-fetch'
 
-import type { Page } from 'puppeteer'
+import type { Page, Browser } from 'puppeteer'
 import type { BrowserOptions, PDFOptions } from './types'
-
-const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
 
 const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 	const checkDurationMsecs = 1_000
@@ -35,49 +33,63 @@ const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 	}
 }
 
+const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
+
+let browser: Browser | undefined
+
 export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
-	console.log("args:", chromium.args );
-	
-	const browser = await puppeteer.launch({
-		args: chromium.args,
-		defaultViewport: chromium.defaultViewport,
-		executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
-		headless: chromium.headless,
-		ignoreHTTPSErrors: true
-	})
+	browser =
+		browser ??
+		(await puppeteer.launch({
+			args: chromium.args,
+			defaultViewport: chromium.defaultViewport,
+			executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
+			headless: chromium.headless,
+			ignoreHTTPSErrors: true
+		}))
 
 	const page = await browser.newPage()
 
-	if (browserOptions?.adBlocker) {
-		const blocker = await PuppeteerBlocker.fromLists(fetch, [
-			'https://secure.fanboy.co.nz/fanboy-cookiemonster.txt',
-			'https://easylist.to/easylist/easylist.txt'
-		])
-
-		await blocker.enableBlockingInPage(page)
-	}
-
-	if (html instanceof URL) {
-		await page.goto(html.toString(), { waitUntil: ['load', 'domcontentloaded', 'networkidle0'] })
-	} else {
-		await page.setContent(html.toString(), { waitUntil: ['load', 'domcontentloaded', 'networkidle0'] })
-	}
-
-	await page.emulateMediaType('screen')
-	if (browserOptions?.secondaryRenderAwait) await waitTillHTMLRendered(page, 30_000)
-
-	let pdf: Buffer
-
 	try {
-		pdf = await page.pdf(pdfOptions)
-	} catch (err) {
-		if (err && typeof err === 'object') throw badRequest((<any>err).message)
+		if (browserOptions?.adBlocker) {
+			const blocker = await PuppeteerBlocker.fromLists(fetch, [
+				'https://secure.fanboy.co.nz/fanboy-cookiemonster.txt',
+				'https://easylist.to/easylist/easylist.txt'
+			])
 
-		throw err
+			await blocker.enableBlockingInPage(page)
+		}
+
+		if (html instanceof URL) {
+			await page.goto(html.toString(), {
+				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2']
+			})
+		} else {
+			await page.setContent(html.toString(), {
+				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2']
+			})
+		}
+
+		await page.emulateMediaType('screen')
+		if (browserOptions?.secondaryRenderAwait) await waitTillHTMLRendered(page, 30_000)
+
+		let pdf: Buffer
+
+		try {
+			pdf = await page.pdf(pdfOptions)
+		} catch (err) {
+			if (err && typeof err === 'object') throw badRequest((<any>err).message)
+
+			throw err
+		}
+
+		await page.close()
+		return pdf
+	} catch (e) {
+		throw e
+	} finally {
+		await page.close()
 	}
-
-	await page.close()
-	return pdf
 }
 
 export type * from './types'
