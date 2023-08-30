@@ -1,4 +1,8 @@
-import type { PDFOptions as PuppeteerOptions } from 'puppeteer'
+import type { PDFOptions as PuppeteerOptions, Browser } from 'puppeteer'
+
+export type BrowserContainer = {
+	browser?: Browser
+}
 
 type OmittedOptions = {
 	path: any

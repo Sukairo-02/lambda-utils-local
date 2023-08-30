@@ -3,9 +3,10 @@ import chromium from '@sparticuz/chromium'
 import { badRequest } from '@hapi/boom'
 import { PuppeteerBlocker } from '@cliqz/adblocker-puppeteer'
 import fetch from 'cross-fetch'
+import { exec } from 'child_process'
 
-import type { Page, Browser } from 'puppeteer'
-import type { BrowserOptions, PDFOptions } from './types'
+import type { Page } from 'puppeteer'
+import type { BrowserOptions, PDFOptions, BrowserContainer } from './types'
 
 const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 	const checkDurationMsecs = 1_000
@@ -36,15 +37,19 @@ const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
 
 export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
-	const browser = await puppeteer.launch({
-		args: chromium.args,
-		defaultViewport: chromium.defaultViewport,
-		executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
-		headless: chromium.headless,
-		ignoreHTTPSErrors: true
-	})
+	const browserContainer: BrowserContainer = {
+		browser: await puppeteer.launch({
+			args: chromium.args,
+			defaultViewport: chromium.defaultViewport,
+			executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
+			headless: chromium.headless,
+			ignoreHTTPSErrors: true
+		})
+	}
 
-	const page = await browser.newPage()
+	const { browser } = browserContainer
+
+	const page = await browser!.newPage()
 
 	try {
 		if (browserOptions?.adBlocker) {
@@ -89,11 +94,14 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 
 		try {
 			browser?.process()?.kill('SIGTERM')
-			const asyncDoubleKillBrowser = await (async () => {
+			await (async () => {
 				try {
-					await browser.close
+					await browser?.close()
 				} catch (e) {}
 			})()
+			exec('pkill chrome')
+			exec('pkill chromium')
+			delete browserContainer.browser
 		} catch (err) {}
 	}
 }
