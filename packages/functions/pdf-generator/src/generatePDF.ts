@@ -39,7 +39,7 @@ const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromiu
 export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
 	const browserContainer: BrowserContainer = {
 		browser: await puppeteer.launch({
-			args: chromium.args,
+			args: [...chromium.args, '--lang-en-US,en'],
 			defaultViewport: chromium.defaultViewport,
 			executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
 			headless: chromium.headless,
@@ -93,8 +93,8 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 		} catch (err) {}
 
 		try {
-			browser?.process()?.kill('SIGTERM');
-			(async () => {
+			browser?.process()?.kill('SIGTERM')
+			;(async () => {
 				try {
 					await browser?.close()
 				} catch (e) {}
