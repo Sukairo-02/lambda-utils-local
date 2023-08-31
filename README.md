@@ -10,6 +10,11 @@ To deploy the utils, you need to configurate your `AWS CLI`, then follow the nex
 2.  `npm run build`
 3.  `npm run deploy`
 
+### Limits
+
+`Request` and `Response` payloads are limited to `5Mb` by `API Gateway`.  
+Exceeding the limits may result in `413`, `500`, `502` errors.
+
 ## Image Cropper
 
 -   `POST /crop-image`
@@ -81,11 +86,6 @@ To deploy the utils, you need to configurate your `AWS CLI`, then follow the nex
 
         Result image is returned as `base64`-encoded string, it gets decoded back into image by browsers automatically.
 
-    -   Limits
-
-        `Request` and `Response` payloads are limited to `5Mb` by `API Gateway`.  
-        Exceeding the limits will\may result in `413`, `500`, `502` errors.
-
 ## PDF Generator
 
 -   `POST /generate-pdf`
@@ -135,6 +135,21 @@ To deploy the utils, you need to configurate your `AWS CLI`, then follow the nex
 
             -   `displayHeaderFooter` - Whether to show the header and footer.  
                 `Default`: `false`
+
+            -   `headerTemplate`, `footerTemplate` - HTML template for the print header\footer.  
+                Should be valid HTML with the following classes used to inject values into them:
+
+                -   `date` - formatted print date
+
+                -   `title` - document title
+
+                -   `url` - document location
+
+                -   `pageNumber` - current page number
+
+                -   `totalPages` - total pages in the document
+
+                :warning: `margin` must be set for them to not be overlayed by main content.
 
             -   `printBackground` - Whether to print background graphics.  
                 `Default`: `true`
