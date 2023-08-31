@@ -5,7 +5,10 @@ const defaultError = {
 	statusCode: 500,
 	body: JSON.stringify({
 		message: 'Something went wrong. Try again later...'
-	})
+	}),
+	headers: {
+		'Content-Type': 'application/json'
+	}
 }
 
 export const handlerV1 = (handler: APIGatewayProxyHandler) => {
@@ -16,7 +19,10 @@ export const handlerV1 = (handler: APIGatewayProxyHandler) => {
 					statusCode: 500,
 					body: JSON.stringify({
 						message: 'Server failed to respond'
-					})
+					}),
+					headers: {
+						'Content-Type': 'application/json'
+					}
 				}
 			)
 		} catch (err) {
@@ -38,7 +44,10 @@ export const handlerV1 = (handler: APIGatewayProxyHandler) => {
 
 			return {
 				statusCode,
-				body: JSON.stringify(response)
+				body: JSON.stringify(response),
+				headers: {
+					'Content-Type': 'application/json'
+				}
 			}
 		}
 	}
@@ -54,7 +63,10 @@ export const handlerV2 = (handler: APIGatewayProxyHandlerV2) => {
 					statusCode: 500,
 					body: JSON.stringify({
 						message: 'Server failed to respond'
-					})
+					}),
+					headers: {
+						'Content-Type': 'application/json'
+					}
 				}
 			)
 		} catch (err) {
@@ -76,7 +88,10 @@ export const handlerV2 = (handler: APIGatewayProxyHandlerV2) => {
 
 			return {
 				statusCode,
-				body: JSON.stringify(response)
+				body: JSON.stringify(response),
+				headers: {
+					'Content-Type': 'application/json'
+				}
 			}
 		}
 	}
