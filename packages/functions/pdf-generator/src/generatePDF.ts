@@ -37,8 +37,10 @@ const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
 
 export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
+	const excludedArgs = ['--single-process', '--use-gl=angle', '--use-angle=swiftshader']
+
 	const browser = await puppeteer.launch({
-		args: [...chromium.args.filter((e) => e !== '--single-process'), '--lang=en-US,en'],
+		args: [...chromium.args.filter((e) => excludedArgs.find((el) => el !== e)), '--lang=en-US,en'],
 		defaultViewport: chromium.defaultViewport,
 		executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
 		headless: chromium.headless,
