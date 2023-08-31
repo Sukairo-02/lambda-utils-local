@@ -34,7 +34,7 @@ const pdfSchema = z.object({
 
 			if (numbers.length <= 1) return true
 
-			return numbers[2] > numbers[1]
+			return numbers[1] > numbers[0]
 		}, 'Invalid page ranges')
 		.optional(),
 	format: z.string().toLowerCase().pipe(pageFormatSchema).optional(),
