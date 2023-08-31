@@ -93,8 +93,8 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 		} catch (err) {}
 
 		try {
-			browser?.process()?.kill('SIGTERM')
-			await (async () => {
+			browser?.process()?.kill('SIGTERM');
+			(async () => {
 				try {
 					await browser?.close()
 				} catch (e) {}
