@@ -1,13 +1,7 @@
-import type { PDFOptions as PuppeteerOptions, Browser } from 'puppeteer'
-
-export type BrowserContainer = {
-	browser?: Browser
-}
+import type { PDFOptions as PuppeteerOptions } from 'puppeteer'
 
 type OmittedOptions = {
 	path: any
-	headerTemplate: any
-	footerTemplate: any
 }
 
 export type PDFOptions = Omit<PuppeteerOptions, keyof OmittedOptions>

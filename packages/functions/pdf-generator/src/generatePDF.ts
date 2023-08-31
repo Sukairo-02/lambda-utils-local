@@ -6,7 +6,7 @@ import fetch from 'cross-fetch'
 import { exec } from 'child_process'
 
 import type { Page } from 'puppeteer'
-import type { BrowserOptions, PDFOptions, BrowserContainer } from './types'
+import type { BrowserOptions, PDFOptions } from './types'
 
 const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 	const checkDurationMsecs = 1_000
@@ -37,38 +37,43 @@ const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
 
 export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
-	const browserContainer: BrowserContainer = {
-		browser: await puppeteer.launch({
-			args: [...chromium.args, '--lang-en-US,en'],
-			defaultViewport: chromium.defaultViewport,
-			executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
-			headless: chromium.headless,
-			ignoreHTTPSErrors: true
-		})
-	}
-
-	const { browser } = browserContainer
+	const browser = await puppeteer.launch({
+		args: [...chromium.args.filter((e) => e !== '--single-process'), '--lang=en-US,en'],
+		defaultViewport: chromium.defaultViewport,
+		executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
+		headless: chromium.headless,
+		ignoreHTTPSErrors: true
+	})
 
 	const page = await browser!.newPage()
+	await page.setExtraHTTPHeaders({
+		'Accept-Language': 'en'
+	})
 
 	try {
 		if (browserOptions?.adBlocker) {
-			const blocker = await PuppeteerBlocker.fromLists(fetch, [
-				'https://secure.fanboy.co.nz/fanboy-cookiemonster.txt',
-				'https://easylist.to/easylist/easylist.txt'
-			])
+			try {
+				const blocker = await PuppeteerBlocker.fromLists(fetch, [
+					'https://secure.fanboy.co.nz/fanboy-cookiemonster.txt',
+					'https://easylist.to/easylist/easylist.txt'
+				])
 
-			await blocker.enableBlockingInPage(page)
+				await blocker.enableBlockingInPage(page)
+			} catch (e) {}
 		}
 
-		if (html instanceof URL) {
-			await page.goto(html.toString(), {
-				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2']
-			})
-		} else {
-			await page.setContent(html.toString(), {
-				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2']
-			})
+		try {
+			if (html instanceof URL) {
+				await page.goto(html.toString(), {
+					waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2']
+				})
+			} else {
+				await page.setContent(html.toString(), {
+					waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2']
+				})
+			}
+		} catch (e) {
+			throw badRequest('Unable to load requested page')
 		}
 
 		await page.emulateMediaType('screen')
@@ -93,16 +98,12 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 		} catch (err) {}
 
 		try {
-			browser?.process()?.kill('SIGTERM')
-			;(async () => {
-				try {
-					await browser?.close()
-				} catch (e) {}
-			})()
+			await browser.close()
+		} catch (err) {
+			browser.process()?.kill('SIGTERM')
 			exec('pkill chrome')
 			exec('pkill chromium')
-			delete browserContainer.browser
-		} catch (err) {}
+		}
 	}
 }
 

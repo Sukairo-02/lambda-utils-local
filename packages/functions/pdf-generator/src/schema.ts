@@ -24,6 +24,8 @@ const pdfMarginSchema = z.object({
 const pdfSchema = z.object({
 	scale: z.number().min(0.1).max(2).optional(),
 	displayHeaderFooter: z.boolean().optional(),
+	headerTemplate: z.string().optional(),
+	footerTemplate: z.string().optional(),
 	printBackground: z.boolean().optional(),
 	landscape: z.boolean().optional(),
 	pageRanges: z
