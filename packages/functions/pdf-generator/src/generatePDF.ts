@@ -37,17 +37,15 @@ const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
 
 export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
-	const excludedArgs = ['--single-process', '--use-gl=angle', '--use-angle=swiftshader']
-
 	const browser = await puppeteer.launch({
-		args: [...chromium.args.filter((e) => excludedArgs.find((el) => el !== e)), '--lang=en-US,en'],
+		args: [...chromium.args, '--lang=en-US,en'],
 		defaultViewport: chromium.defaultViewport,
 		executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
 		headless: chromium.headless,
 		ignoreHTTPSErrors: true
 	})
 
-	const page = await browser!.newPage()
+	const page = await browser.newPage()
 	await page.setExtraHTTPHeaders({
 		'Accept-Language': 'en'
 	})
@@ -86,26 +84,29 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 		try {
 			pdf = await page.pdf(pdfOptions)
 		} catch (err) {
-			if (err && typeof err === 'object') throw badRequest((<any>err).message)
+			if (err && typeof err === 'object')
+				throw badRequest((<any>err).message ?? 'Unable to generate PDF from given source')
 
 			throw err
 		}
 
 		return pdf
-	} catch (e) {
-		throw e
 	} finally {
 		try {
 			await page.close()
-		} catch (err) {}
+		} catch (e) {}
 
 		try {
-			await browser.close()
-		} catch (err) {
-			browser.process()?.kill('SIGTERM')
+			await browser.disconnect()
+		} catch (e) {}
+
+		try {
 			exec('pkill chrome')
+		} catch (e) {}
+
+		try {
 			exec('pkill chromium')
-		}
+		} catch (e) {}
 	}
 }
 
