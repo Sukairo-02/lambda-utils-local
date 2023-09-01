@@ -78,7 +78,7 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 		}
 
 		await page.emulateMediaType('screen')
-		if (browserOptions?.secondaryRenderAwait) await waitTillHTMLRendered(page, 30_000)
+		if (browserOptions?.secondaryRenderAwait) await waitTillHTMLRendered(page, 15_000)
 
 		let pdf: Buffer
 
