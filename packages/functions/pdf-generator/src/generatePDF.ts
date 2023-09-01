@@ -98,8 +98,12 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 		} catch (e) {}
 
 		try {
+			console.log('Disconnecting browser...')
 			await browser.disconnect()
-		} catch (e) {}
+			console.log('Browser disconnected')
+		} catch (e) {
+			console.error(e)
+		}
 
 		try {
 			exec('pkill chrome')
