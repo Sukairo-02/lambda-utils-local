@@ -126,7 +126,7 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
 
         ```
 
-        -   `source` - Link to webpage or HTML string to be converted to `pdf`.
+        -   `source` - Link to webpage or HTML string to be converted to `pdf`.  
             :warning: Invalid links will be resolved as HTML.
 
         -   `pdfOptions`
