@@ -46,8 +46,7 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 		defaultViewport: chromium.defaultViewport,
 		executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
 		headless: chromium.headless,
-		ignoreHTTPSErrors: true,
-		dumpio: true
+		ignoreHTTPSErrors: true
 	})
 
 	const page = await browser.newPage()
