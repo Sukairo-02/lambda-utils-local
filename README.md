@@ -12,7 +12,7 @@ To deploy the utils, you need to configurate your `AWS CLI`, then follow the nex
 
 ### Limits
 
-`Request` and `Response` payloads are limited to `5Mb` by `API Gateway`.  
+`Request` and `Response` payloads are limited to `5Mb` and `30s` by `API Gateway`.  
 Exceeding the limits may result in `413`, `500`, `502` errors.
 
 ## Image Cropper
@@ -119,6 +119,8 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
             browserOptions?: {
                 secondaryRenderAwait?: boolean;
                 adBlocker?: boolean;
+                width?: number; // Must be in [240-1920] range
+                height?: number; // Must be in [240-1920] range
             };
         }
 
@@ -194,6 +196,10 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
 
             -   `adBlocker` - Whether to attempt to block ads and cookie consent popups.  
                 `Default`: `false`
+
+            -   `width`, `height` - Custom viewport dimensions.  
+                :speech_balloon:It is recommended to match viewport dimensiont to `pdf` output dimensions.  
+                `Default`: `1920`, `1080`
 
     -   Output
 
