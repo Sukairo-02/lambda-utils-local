@@ -35,10 +35,14 @@ const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 }
 
 const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
+const forbiddenArgs = ['--use-gl=angle']
+const additionalArgs = ['--lang=en-GB,en', '--use-gl=desktop', '--disable-3d-apis']
+
+const chromiumArgs = [...chromium.args.filter((e) => !forbiddenArgs.find((el) => e === el)), ...additionalArgs]
 
 export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
 	const browser = await puppeteer.launch({
-		args: [...chromium.args, '--lang=en-US,en'],
+		args: chromiumArgs,
 		defaultViewport: chromium.defaultViewport,
 		executablePath: process.env.IS_LOCAL ? chromiumPath : await chromium.executablePath(),
 		headless: chromium.headless,
@@ -98,20 +102,12 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 		} catch (e) {}
 
 		try {
-			console.log('Disconnecting browser...')
-			await browser.disconnect()
-			console.log('Browser disconnected')
+			console.log('Closing browser...')
+			await browser.close()
+			console.log('Browser closed')
 		} catch (e) {
-			console.error(e)
+			console.error(`Browser closing error:\n${e}`)
 		}
-
-		try {
-			exec('pkill chrome')
-		} catch (e) {}
-
-		try {
-			exec('pkill chromium')
-		} catch (e) {}
 	}
 }
 
