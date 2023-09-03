@@ -40,11 +40,11 @@ const additionalArgs = ['--lang=en-GB,en', '--disable-3d-apis']
 
 export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
 	const scrWidth =
-		browserOptions?.width && browserOptions?.width >= 320 && browserOptions?.width <= 1920
+		browserOptions?.width && browserOptions?.width >= 240 && browserOptions?.width <= 1920
 			? browserOptions.width
 			: 1920
 	const scrheight =
-		browserOptions?.height && browserOptions?.height >= 320 && browserOptions?.height <= 1920
+		browserOptions?.height && browserOptions?.height >= 240 && browserOptions?.height <= 1920
 			? browserOptions.height
 			: 1080
 
