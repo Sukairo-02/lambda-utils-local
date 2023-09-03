@@ -9,4 +9,6 @@ export type PDFOptions = Omit<PuppeteerOptions, keyof OmittedOptions>
 export type BrowserOptions = {
 	secondaryRenderAwait?: boolean
 	adBlocker?: boolean
+	width?: number
+	height?: number
 }

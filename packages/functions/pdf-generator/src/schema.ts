@@ -50,7 +50,9 @@ const pdfSchema = z.object({
 
 const browserSchema = z.object({
 	secondaryRenderAwait: z.boolean().optional(),
-	adBlocker: z.boolean().optional()
+	adBlocker: z.boolean().optional(),
+	width: z.number().min(240).max(1920).optional(),
+	height: z.number().min(240).max(1920).optional()
 })
 
 export default z.object({
