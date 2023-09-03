@@ -8,6 +8,4 @@ COPY . ${LAMBDA_TASK_ROOT}
 
 RUN npm install
 
-RUN sudo SOURCE_DATE_EPOCH=$(date +%s) fc-cache -rs
-
 CMD ["build/index.handler"]
