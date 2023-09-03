@@ -126,12 +126,8 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 					console.error(`Browser closing error:\n${e}`)
 				})
 
-			exec('pkill chromium', (e) => {
-				console.error(`pkill chromium error:\n${e}`)
-			})
-			exec('pkill chrome', (e) => {
-				console.error(`pkill chromium error:\n${e}`)
-			})
+			exec('pkill chromium')
+			exec('pkill chrome')
 		} catch (e) {
 			console.error(`Process termination error:\n${e}`)
 		}
