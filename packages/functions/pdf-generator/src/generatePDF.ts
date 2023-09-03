@@ -35,8 +35,8 @@ const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 }
 
 const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
-const forbiddenArgs = ['--use-gl=angle']
-const additionalArgs = ['--lang=en-GB,en', '--use-gl=gles2', '--disable-3d-apis']
+const forbiddenArgs: string[] = []
+const additionalArgs = ['--lang=en-GB,en', '--disable-3d-apis']
 
 const chromiumArgs = [...chromium.args.filter((e) => !forbiddenArgs.find((el) => e === el)), ...additionalArgs]
 
