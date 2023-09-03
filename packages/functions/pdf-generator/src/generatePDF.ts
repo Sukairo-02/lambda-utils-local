@@ -35,7 +35,7 @@ const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 }
 
 const chromiumPath = '/tmp/localChromium/chromium/mac-1165945/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
-const forbiddenArgs = ['--window-size=1920,1080']
+const forbiddenArgs: string[] = []
 const additionalArgs = ['--lang=en-GB,en', '--disable-3d-apis']
 
 export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, browserOptions?: BrowserOptions) => {
@@ -46,13 +46,9 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 	const scrheight =
 		browserOptions?.height && browserOptions?.height >= 320 && browserOptions?.height <= 1920
 			? browserOptions.height
-			: 1920
+			: 1080
 
-	const chromiumArgs = [
-		...chromium.args.filter((e) => !forbiddenArgs.find((el) => e === el)),
-		...additionalArgs,
-		`--window-size=${scrWidth},${scrheight}`
-	]
+	const chromiumArgs = [...chromium.args.filter((e) => !forbiddenArgs.find((el) => e === el)), ...additionalArgs]
 
 	const browser = await puppeteer.launch({
 		args: chromiumArgs,
@@ -63,6 +59,7 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 	})
 
 	const page = await browser.newPage()
+	await page.setViewport({ width: scrWidth, height: scrheight })
 	await page.setExtraHTTPHeaders({
 		'Accept-Language': 'en'
 	})
