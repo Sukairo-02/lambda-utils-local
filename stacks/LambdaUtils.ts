@@ -26,9 +26,15 @@ export function LambdaUtils({ stack }: StackContext) {
 		timeout: 180
 	})
 
+	const nodeMailer = new Function(stack, 'nodeMailerFunction', {
+		runtime: 'container',
+		handler: './packages/functions/nodemailer'
+	})
+
 	const gatewayV2 = new Api(stack, 'gateway-v2', {
 		routes: {
-			'POST /generate-pdf': pdfGenerator
+			'POST /generate-pdf': pdfGenerator,
+			'POST /send-mail': nodeMailer
 		}
 	})
 
