@@ -205,7 +205,7 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
         type Output = string
         ```
 
-        Result dociment is returned as `base64`-encoded string, it gets decoded back into `pdf` by browsers automatically.
+        Result document is returned as `base64`-encoded string, it gets decoded back into `pdf` by browsers automatically.
 
 ## Node Mailer
 
