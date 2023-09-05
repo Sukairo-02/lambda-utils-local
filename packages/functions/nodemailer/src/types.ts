@@ -5,7 +5,7 @@ export type MailCredentials = {
 
 export type MailOptions = {
 	from: string
-	reply?: string
+	replyTo?: string
 	to: string
 	subject?: string
 	text: string

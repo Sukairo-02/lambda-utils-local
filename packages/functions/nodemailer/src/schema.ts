@@ -7,7 +7,7 @@ export default z.object({
 	}),
 	mail: z.object({
 		from: z.string(),
-		reply: z.string().email().optional(),
+		replyTo: z.string().email().optional(),
 		to: z.string().email(),
 		subject: z.string(),
 		text: z.string(),
