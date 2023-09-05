@@ -220,7 +220,6 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
                 pass: string;
             };
             mail: {
-                from: string;
                 to: string;
                 subject: string;
                 text: string;
@@ -236,8 +235,6 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
             -   `pass` - [Application password](https://support.google.com/accounts/answer/185833?hl=en)
 
         -   `mail`
-
-            -   `from` - The e-mail address of the sender. Can be plain `sender@server.com` or formatted `Sender Name <sender@server.com>`.
 
             -   `to` - Recipient of the e-mail.
 

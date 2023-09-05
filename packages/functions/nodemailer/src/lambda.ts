@@ -20,11 +20,11 @@ const lambda: APIGatewayProxyHandlerV2 = async (event) => {
 
 	const { credentials, mail } = parseResult.data
 
-	const response = await sendMail(credentials, mail)
+	await sendMail(credentials, mail)
 
 	return {
 		statusCode: 200,
-		body: JSON.stringify({ message: response }),
+		body: JSON.stringify({ message: 'Message delivered succesfully!' }),
 		headers: {
 			'Content-Type': 'application/json'
 		}

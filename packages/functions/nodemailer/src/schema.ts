@@ -6,7 +6,6 @@ export default z.object({
 		pass: z.string()
 	}),
 	mail: z.object({
-		from: z.string(),
 		to: z.string().email(),
 		subject: z.string(),
 		text: z.string(),
