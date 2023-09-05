@@ -24,7 +24,7 @@ const lambda: APIGatewayProxyHandlerV2 = async (event) => {
 
 	return {
 		statusCode: 200,
-		body: JSON.stringify(response),
+		body: JSON.stringify({ message: response }),
 		headers: {
 			'Content-Type': 'application/json'
 		}
