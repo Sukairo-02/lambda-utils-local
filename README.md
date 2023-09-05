@@ -90,8 +90,6 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
 
 -   `POST /generate-pdf`
 
-    -   General
-
     -   Input
 
         ```Typescript
@@ -141,15 +139,15 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
             -   `headerTemplate`, `footerTemplate` - HTML template for the print header\footer.  
                 Should be valid HTML with the following classes used to inject values into them:
 
-                -   `date` - formatted print date
+                -   `date` - formatted print date.
 
-                -   `title` - document title
+                -   `title` - document title.
 
-                -   `url` - document location
+                -   `url` - document location.
 
-                -   `pageNumber` - current page number
+                -   `pageNumber` - current page number.
 
-                -   `totalPages` - total pages in the document
+                -   `totalPages` - total pages in the document.
 
                 :warning: `margin` must be set for them to not be overlayed by main content.
 
@@ -186,7 +184,7 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
                 `Default`: `false`
 
             -   `timeout` - Timeout in milliseconds.  
-                :warning:Pass `0` to disable timeout.
+                :warning:Pass `0` to disable timeout.  
                 `Default`: `30_000`
 
         -   `browserOptions`
@@ -208,3 +206,51 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
         ```
 
         Result dociment is returned as `base64`-encoded string, it gets decoded back into `pdf` by browsers automatically.
+
+## Node Mailer
+
+-   `POST /send-mail`
+
+    -   Input
+
+        ```Typescript
+        type Input = {
+            credentials: {
+                user: string;
+                pass: string;
+            };
+            mail: {
+                from: string;
+                to: string;
+                subject: string;
+                text: string;
+                html?: string;
+            };
+        }
+        ```
+
+        -   `credentials` - Credentials of a `Gmail` account you want to send a message from.
+
+            -   `user` - Email
+
+            -   `pass` - [Application password](https://support.google.com/accounts/answer/185833?hl=en)
+
+        -   `mail`
+
+            -   `from` - The e-mail address of the sender. Can be plain `sender@server.com` or formatted `Sender Name <sender@server.com>`.
+
+            -   `to` - Recipient of the e-mail.
+
+            -   `subject` - The subject of the e-mail.
+
+            -   `text` - The `plaintext` version of the message.
+
+            -   `html` - The `HTML` version of the message.
+
+    -   Output
+
+        ```Typescript
+            type Output = {
+                message: string
+            }
+        ```
