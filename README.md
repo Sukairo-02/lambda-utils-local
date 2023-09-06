@@ -221,8 +221,8 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
             };
             mail: {
                 to: string;
-                subject: string;
-                text: string;
+                subject?: string;
+                text?: string;
                 html?: string;
             };
         }
