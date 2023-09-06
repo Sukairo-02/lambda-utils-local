@@ -6,6 +6,6 @@ export type MailCredentials = {
 export type MailOptions = {
 	to: string
 	subject?: string
-	text: string
+	text?: string
 	html?: string
 }
