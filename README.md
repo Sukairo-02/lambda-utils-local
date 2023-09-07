@@ -247,7 +247,7 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
     -   Output
 
         ```Typescript
-            type Output = {
-                message: string
-            }
+        type Output = {
+            message: string
+        }
         ```
