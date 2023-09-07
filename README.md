@@ -120,8 +120,7 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
                 width?: number; // Must be in [240-1920] range
                 height?: number; // Must be in [240-1920] range
             };
-        }
-
+        };
         ```
 
         -   `source` - Link to webpage or HTML string to be converted to `pdf`.  
