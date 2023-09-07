@@ -71,7 +71,7 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
             };
 
             image: File;
-        }
+        };
         ```
 
         Input must be passed as `multipart/form-data`;  
@@ -81,7 +81,7 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
     -   Output
 
         ```Typescript
-        type Output = string
+        type Output = string;
         ```
 
         Result image is returned as `base64`-encoded string, it gets decoded back into image by browsers automatically.
@@ -202,7 +202,7 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
     -   Output
 
         ```Typescript
-        type Output = string
+        type Output = string;
         ```
 
         Result document is returned as `base64`-encoded string, it gets decoded back into `pdf` by browsers automatically.
@@ -225,7 +225,7 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
                 text?: string;
                 html?: string;
             };
-        }
+        };
         ```
 
         -   `credentials` - Credentials of a `Gmail` account you want to send a message from.
@@ -248,6 +248,6 @@ Exceeding the limits may result in `413`, `500`, `502` errors.
 
         ```Typescript
         type Output = {
-            message: string
-        }
+            message: string;
+        };
         ```
