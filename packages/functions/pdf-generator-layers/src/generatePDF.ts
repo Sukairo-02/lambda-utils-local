@@ -105,31 +105,7 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 
 		return pdf
 	} finally {
-		try {
-			await page.close()
-		} catch (e) {
-			console.error(`Page closing error:\n${e}`)
-		}
-
-		try {
-			browser.process()?.kill('SIGTERM')
-		} catch (e) {
-			console.error(`Process SIGTERM error:\n${e}`)
-		}
-
-		try {
-			browser
-				.close()
-				.then(() => {})
-				.catch((e) => {
-					console.error(`Browser closing error:\n${e}`)
-				})
-
-			exec('pkill chromium')
-			exec('pkill chrome')
-		} catch (e) {
-			console.error(`Process termination error:\n${e}`)
-		}
+		await browser.close()
 	}
 }
 
