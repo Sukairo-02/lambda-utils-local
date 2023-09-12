@@ -52,7 +52,8 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 	const browser = await puppeteer.launch({
 		args: chromiumArgs,
 		defaultViewport: chromium.defaultViewport,
-		executablePath: await chromium.executablePath(),
+		//@ts-ignore
+		executablePath: await chromium.executablePath,
 		headless: chromium.headless,
 		ignoreHTTPSErrors: true
 	})
@@ -105,7 +106,9 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 
 		return pdf
 	} finally {
-		await browser.close()
+		// await browser.close()
+		// console.log("klass");
+		
 	}
 }
 
