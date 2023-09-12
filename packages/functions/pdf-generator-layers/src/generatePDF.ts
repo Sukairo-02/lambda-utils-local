@@ -3,7 +3,6 @@ import chromium from '@sparticuz/chromium'
 import { badRequest } from '@hapi/boom'
 import { PuppeteerBlocker } from '@cliqz/adblocker-puppeteer'
 import fetch from 'cross-fetch'
-import { exec } from 'child_process'
 
 import type { Page } from 'puppeteer'
 import type { BrowserOptions, PDFOptions } from './types'
@@ -52,7 +51,7 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 	const browser = await puppeteer.launch({
 		args: chromiumArgs,
 		defaultViewport: chromium.defaultViewport,
-		//@ts-ignore
+		//@ts-ignore - type is different on lambda
 		executablePath: await chromium.executablePath,
 		headless: chromium.headless,
 		ignoreHTTPSErrors: true
@@ -64,52 +63,46 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 		'Accept-Language': 'en'
 	})
 
-	try {
-		if (browserOptions?.adBlocker) {
-			try {
-				const blocker = await PuppeteerBlocker.fromLists(fetch, [
-					'https://secure.fanboy.co.nz/fanboy-cookiemonster.txt',
-					'https://easylist.to/easylist/easylist.txt'
-				])
-
-				await blocker.enableBlockingInPage(page)
-			} catch (e) {}
-		}
-
+	if (browserOptions?.adBlocker) {
 		try {
-			if (html instanceof URL) {
-				await page.goto(html.toString(), {
-					waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2']
-				})
-			} else {
-				await page.setContent(html.toString(), {
-					waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2']
-				})
-			}
-		} catch (e) {
-			throw badRequest('Unable to load requested page')
-		}
+			const blocker = await PuppeteerBlocker.fromLists(fetch, [
+				'https://secure.fanboy.co.nz/fanboy-cookiemonster.txt',
+				'https://easylist.to/easylist/easylist.txt'
+			])
 
-		await page.emulateMediaType('screen')
-		if (browserOptions?.secondaryRenderAwait) await waitTillHTMLRendered(page, 15_000)
-
-		let pdf: Buffer
-
-		try {
-			pdf = await page.pdf(pdfOptions)
-		} catch (err) {
-			if (err && typeof err === 'object')
-				throw badRequest((<any>err).message ?? 'Unable to generate PDF from given source')
-
-			throw err
-		}
-
-		return pdf
-	} finally {
-		// await browser.close()
-		// console.log("klass");
-		
+			await blocker.enableBlockingInPage(page)
+		} catch (e) {}
 	}
+
+	try {
+		if (html instanceof URL) {
+			await page.goto(html.toString(), {
+				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2']
+			})
+		} else {
+			await page.setContent(html.toString(), {
+				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2']
+			})
+		}
+	} catch (e) {
+		throw badRequest('Unable to load requested page')
+	}
+
+	await page.emulateMediaType('screen')
+	if (browserOptions?.secondaryRenderAwait) await waitTillHTMLRendered(page, 5_000)
+
+	let pdf: Buffer
+
+	try {
+		pdf = await page.pdf(pdfOptions)
+	} catch (err) {
+		if (err && typeof err === 'object')
+			throw badRequest((<any>err).message ?? 'Unable to generate PDF from given source')
+
+		throw err
+	}
+
+	return pdf
 }
 
 export type * from './types'
