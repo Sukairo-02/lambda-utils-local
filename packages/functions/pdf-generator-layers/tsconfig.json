@@ -1,0 +1,12 @@
+{
+	"extends": "@tsconfig/node16/tsconfig.json",
+	"compilerOptions": {
+		"module": "esnext",
+		"moduleResolution": "node",
+		"noErrorTruncation": true,
+		"baseUrl": ".",
+		"paths": {
+			"@lambda-utils/core/*": ["../../core/src/*"]
+		}
+	}
+}
