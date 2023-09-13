@@ -1,4 +1,4 @@
-import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { StackContext, ApiGatewayV1Api, Api, Function } from 'sst/constructs'
 
 export function LambdaUtils({ stack }: StackContext) {
@@ -24,7 +24,7 @@ export function LambdaUtils({ stack }: StackContext) {
 		runtime: 'container',
 		handler: './packages/functions/pdf-generator',
 		memorySize: 3008,
-		timeout: 180
+		timeout: 30
 	})
 
 	const nodeMailer = new Function(stack, 'nodeMailerFunction', {
@@ -32,22 +32,21 @@ export function LambdaUtils({ stack }: StackContext) {
 		handler: './packages/functions/nodemailer'
 	})
 
-	const layerChromium = new lambda.LayerVersion(stack, "chromiumLayers", {
-		code: lambda.Code.fromAsset("layers/chromium"),
-	  });
+	const layerChromium = new lambda.LayerVersion(stack, 'chromiumLayers', {
+		code: lambda.Code.fromAsset('layers/chromium')
+	})
 
 	const pdfGeneratorLayers = new Function(stack, 'pdfGeneratorLayersFunction', {
-		runtime: "nodejs18.x",
+		runtime: 'nodejs18.x',
 		handler: './packages/functions/pdf-generator-layers/build/index.handler',
 		memorySize: 3008,
 		layers: [layerChromium],
 		nodejs: {
-            esbuild: {
-              external: ["@sparticuz/chromium"],
-            },
-          },
+			esbuild: {
+				external: ['@sparticuz/chromium']
+			}
+		}
 	})
-
 
 	const gatewayV2 = new Api(stack, 'gateway-v2', {
 		routes: {
