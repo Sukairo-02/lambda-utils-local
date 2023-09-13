@@ -21,4 +21,4 @@ build
 layer
 .env
 
-!layers/chromium/nodejs/node_modules
+!layers/**
