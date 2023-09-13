@@ -5,7 +5,7 @@ import type { ErrorRequestHandler } from 'express'
 
 const defaultHttpErrorMessage = 'Unknown error occured... Try again later'
 
-export = <ErrorRequestHandler>((err, req, res, next) => {
+export default <ErrorRequestHandler>((err, req, res, next) => {
 	try {
 		if (typeof err !== 'object') {
 			console.error('Error:\n')

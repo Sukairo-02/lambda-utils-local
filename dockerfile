@@ -1,6 +1,8 @@
 FROM node:18-alpine
 
 ENV NODE_ENV production
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
 
 USER node
 WORKDIR /home/node

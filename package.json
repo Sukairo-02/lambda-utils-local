@@ -24,6 +24,7 @@
 		"@types/cors": "^2.8.13",
 		"@types/express": "^4.17.17",
 		"axios": "^1.5.0",
+		"bun-types": "^1.0.1",
 		"ts-node": "^10.9.1",
 		"tsconfig-paths": "^4.1.2",
 		"typescript": "^5.0.4"
@@ -36,9 +37,5 @@
 		"@Database": "dist/Database",
 		"@Globals": "dist/Globals",
 		"@Repos": "dist/Repos"
-	},
-	"engines": {
-		"node": "=16.15.0",
-		"npm": "=9.5.0"
 	}
 }
