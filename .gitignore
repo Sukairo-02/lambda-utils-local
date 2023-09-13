@@ -21,4 +21,4 @@ build
 layer
 .env
 
-!layers/**
+!/layers/**
