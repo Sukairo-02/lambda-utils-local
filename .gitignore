@@ -1,0 +1,5 @@
+dist
+node_modules
+/src/test/output.pdf
+bun.lockb
+package-lock.json

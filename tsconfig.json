@@ -1,0 +1,26 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"display": "Node 16",
+	"extends": "./tsconfig.paths.json",
+	"compilerOptions": {
+		"lib": ["ES2020"],
+		"module": "commonjs",
+		"target": "ES2020",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitAny": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": false,
+		"noErrorTruncation": true,
+		"removeComments": true,
+		"sourceMap": true,
+		"outDir": "dist"
+	},
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules/**/*", ".vscode/**/*"],
+	"ts-node": {
+		"require": ["tsconfig-paths/register"]
+	}
+}
