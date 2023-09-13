@@ -20,3 +20,5 @@ package-lock.json
 build
 layer
 .env
+
+!layers/chromium/nodejs/node_modules
