@@ -8,6 +8,24 @@ import { exec } from 'child_process'
 import type { Page } from 'puppeteer'
 import type { BrowserOptions, PDFOptions } from './types'
 
+const asyncPkill = () => {
+	return new Promise<void>((resolve, _) => {
+		let firstDone = false
+
+		exec('pkill chromium', () => {
+			if (firstDone) return resolve()
+
+			firstDone = true
+		})
+
+		exec('pkill chrome', () => {
+			if (firstDone) return resolve()
+
+			firstDone = true
+		})
+	})
+}
+
 const waitTillHTMLRendered = async (page: Page, timeout: number) => {
 	const checkDurationMsecs = 1_000
 	const maxChecks = timeout / checkDurationMsecs
@@ -126,8 +144,7 @@ export default async (html: URL | Buffer | string, pdfOptions?: PDFOptions, brow
 					console.error(`Browser closing error:\n${e}`)
 				})
 
-			exec('pkill chromium')
-			exec('pkill chrome')
+			await asyncPkill()
 		} catch (e) {
 			console.error(`Process termination error:\n${e}`)
 		}
