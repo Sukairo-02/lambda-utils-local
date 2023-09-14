@@ -1,4 +1,6 @@
 import parseRequest from '@Middleware/parseRequest'
+import scaledownStartRequest from '@Middleware/scaledownStartRequest'
+import { requestFinished } from '@Util/scaleToZero'
 
 import type { ZodType } from 'zod'
 import type { RequestHandler } from 'express'
@@ -18,11 +20,13 @@ export default <
 		if (!currentSchema) throw new Error(`Request parser attaching error: schema has no property ${key}!`)
 
 		Object.assign(result, {
-			[key]: [parseRequest(currentSchema), <RequestHandler>(async (req, res, next) => {
+			[key]: [scaledownStartRequest, parseRequest(currentSchema), <RequestHandler>(async (req, res, next) => {
 					try {
 						await handler(req, res, next)
 					} catch (e) {
-						next(e)
+						return next(e)
+					} finally {
+						requestFinished()
 					}
 				})]
 		})

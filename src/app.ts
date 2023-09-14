@@ -7,6 +7,7 @@ import express from 'express'
 import cors from 'cors'
 
 import errorHandler from '@Util/errorHandler'
+import { initScaleToZeroShutdown } from '@Util/scaleToZero'
 import pdfGeneratorController from '@Controllers/pdfGenerator'
 
 const app = express()
@@ -20,6 +21,7 @@ const port = process.env.PORT || 3000
 async function start() {
 	try {
 		app.listen(port, () => console.log(`Server started on port ${port}`))
+		initScaleToZeroShutdown()
 	} catch (e) {
 		console.error(e)
 	}
