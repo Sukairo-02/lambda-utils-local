@@ -12,7 +12,8 @@ class pdfGenerator {
 		'--disable-setuid-sandbox',
 		'--disable-dev-shm-usage',
 		'--lang=en-GB,en',
-		'--disable-3d-apis'
+		'--disable-3d-apis',
+		'--no-zygote'
 	]
 
 	private async waitTillHTMLRendered(page: Page, timeout: number) {
@@ -58,6 +59,7 @@ class pdfGenerator {
 				width: scrWidth
 			},
 			ignoreHTTPSErrors: true,
+			protocolTimeout: 300000,
 			headless: 'new',
 			executablePath: process.env.CHROME_BIN
 		})

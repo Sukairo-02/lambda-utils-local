@@ -1,4 +1,4 @@
-FROM node:18-alpine as builder
+FROM node:16-alpine as builder
 
 ENV NODE_ENV build
 
@@ -11,7 +11,7 @@ RUN npm i
 RUN npx tsc
 RUN npm prune --production
 
-FROM zenika/alpine-chrome:89-with-node-18
+FROM zenika/alpine-chrome:100-with-node-16
 
 USER root
 
