@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "nodemon src/app.ts",
 		"start": "ts-node src/app.ts",
-		"test": "ts-node src/Test/index.ts"
+		"test": "ts-node src/Test/index.ts",
+		"build": "tsc"
 	},
 	"author": "",
 	"license": "ISC",
@@ -16,15 +17,15 @@
 		"cors": "^2.8.5",
 		"cross-fetch": "^4.0.0",
 		"express": "^4.18.2",
+		"module-alias": "^2.2.3",
 		"nodemon": "^3.0.1",
-		"puppeteer": "^21.2.1",
+		"puppeteer-core": "^21.2.1",
 		"zod": "^3.21.4"
 	},
 	"devDependencies": {
 		"@types/cors": "^2.8.13",
 		"@types/express": "^4.17.17",
 		"axios": "^1.5.0",
-		"bun-types": "^1.0.1",
 		"ts-node": "^10.9.1",
 		"tsconfig-paths": "^4.1.2",
 		"typescript": "^5.0.4"

@@ -1,3 +1,8 @@
+// Next 3 lines are only required for compiled production version, break ts-node when used in dev
+if (process.env.NODE_ENV === 'production') {
+	require('module-alias/register')
+}
+
 import express from 'express'
 import cors from 'cors'
 

@@ -1,9 +1,9 @@
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer-core'
 import { badRequest } from '@hapi/boom'
 import { PuppeteerBlocker } from '@cliqz/adblocker-puppeteer'
 import fetch from 'cross-fetch'
 
-import type { Page } from 'puppeteer'
+import type { Page } from 'puppeteer-core'
 import type { BrowserOptions, PDFOptions } from './types'
 
 class pdfGenerator {
@@ -101,7 +101,8 @@ class pdfGenerator {
 				width: scrWidth
 			},
 			ignoreHTTPSErrors: true,
-			headless: 'new'
+			headless: 'new',
+			executablePath: process.env.CHROME_BIN
 		})
 
 		const page = await browser.newPage()
@@ -117,6 +118,7 @@ class pdfGenerator {
 						'https://easylist.to/easylist/easylist.txt'
 					])
 
+					//@ts-ignore - 'error' doesn't affect runtime
 					await blocker.enableBlockingInPage(page)
 				} catch (e) {}
 			}
