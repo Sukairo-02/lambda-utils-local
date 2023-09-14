@@ -4,6 +4,8 @@ ENV NODE_ENV build
 
 COPY src ./src 
 COPY package.json ./package.json
+COPY tsconfig.json ./tsconfig.json
+COPY tsconfig.paths.json ./tsconfig.paths.json
 
 RUN npm i
 RUN npx tsc
